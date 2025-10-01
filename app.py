@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
+from auth import auth_bp
 
 app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 @app.route("/api/ping")
 def ping():
