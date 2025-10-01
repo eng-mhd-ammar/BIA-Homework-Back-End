@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+
+# Config / credentials
+*.env
+config.pyc
+
+# SQLite / MySQL dumps
+*.db
+*.sqlite3
+*.sql
+
+# Excel or uploaded files
+*.xlsx
+*.xls
+uploads/
+
+# Logs
+*.log
+*.tmp
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# VSCode / PyCharm
+.vscode/
+.idea/
