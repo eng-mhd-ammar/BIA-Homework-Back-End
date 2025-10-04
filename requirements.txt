@@ -6,3 +6,4 @@ xlrd
 PyMySQL
 itsdangerous
 Werkzeug
+cryptography

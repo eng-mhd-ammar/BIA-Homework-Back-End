@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, create_engine, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine, JSON, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from config import DATABASE_URL
@@ -7,6 +7,7 @@ Base = declarative_base()
 engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 db_session = SessionLocal()
+
 
 class User(Base):
     __tablename__ = "users"
@@ -22,10 +23,34 @@ class UserTables(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     table_name = Column(String(255), nullable=False)
-    genetic_algorithm_result = Column(JSON, nullable=True, default=[])
+    source_file = Column(String(255), nullable=True)
 
     user = relationship("User", back_populates="tables")
+    ga_results = relationship("GAResult", back_populates="user_table", cascade="all, delete")
 
 
-# إنشاء الجداول
+class GAResult(Base):
+    __tablename__ = "ga_results"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_table_id = Column(Integer, ForeignKey("user_tables.id", ondelete="CASCADE"))
+    best_chromosome = Column(JSON, nullable=False)
+    selected_features = Column(JSON, nullable=False)
+    fitness = Column(Float, nullable=False)
+
+    user_table = relationship("UserTables", back_populates="ga_results")
+    generations = relationship("GAGeneration", back_populates="ga_result", cascade="all, delete")
+
+
+class GAGeneration(Base):
+    __tablename__ = "ga_generations"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ga_result_id = Column(Integer, ForeignKey("ga_results.id", ondelete="CASCADE"), nullable=False)
+    generation = Column(Integer, nullable=False)
+    best_genes = Column(JSON, nullable=False)
+    avg_fitness = Column(Float, nullable=False)
+    best_fitness = Column(Float, nullable=False)
+
+    ga_result = relationship("GAResult", back_populates="generations")
+
+
 Base.metadata.create_all(engine)
