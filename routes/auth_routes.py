@@ -5,6 +5,7 @@ from utils import create_token
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
+
 def get_request_data():
     if request.is_json:
         return request.get_json()

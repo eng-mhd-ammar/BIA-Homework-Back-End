@@ -15,10 +15,10 @@ class User(Base):
     username = Column(String(150), unique=True, nullable=False)
     password = Column(String(300), nullable=False)
 
-    tables = relationship("UserTables", back_populates="user")
+    tables = relationship("UserTable", back_populates="user")
 
 
-class UserTables(Base):
+class UserTable(Base):
     __tablename__ = "user_tables"
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
@@ -37,7 +37,7 @@ class GAResult(Base):
     selected_features = Column(JSON, nullable=False)
     fitness = Column(Float, nullable=False)
 
-    user_table = relationship("UserTables", back_populates="ga_results")
+    user_table = relationship("UserTable", back_populates="ga_results")
     generations = relationship("GAGeneration", back_populates="ga_result", cascade="all, delete")
 
 

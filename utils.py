@@ -13,12 +13,12 @@ def get_serializer():
     return Serializer(SECRET_KEY)
 
 # Create Bearer Token
-def create_token(user_id, username, expires_sec=86400):
+def create_token(user_id, username, expires_sec=604800):
     s = get_serializer()
     return s.dumps({"id": user_id, "username": username})
 
 # Token Validation
-def verify_token(token, expires_sec=86400):
+def verify_token(token, expires_sec=604800):
     s = get_serializer()
     try:
         data = s.loads(token, max_age=expires_sec)
