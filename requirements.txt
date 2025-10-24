@@ -7,3 +7,4 @@ PyMySQL
 itsdangerous
 Werkzeug
 cryptography
+scikit-learn

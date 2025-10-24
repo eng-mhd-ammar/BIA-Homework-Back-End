@@ -4,6 +4,7 @@ from routes.upload_routes import upload_bp
 from routes.user_tables_routes import user_tables_bp
 from routes.ga_routes import ga_bp
 from routes.table_view_routes import table_view_bp
+from routes.traditional_routes import traditional_bp
 from flask_cors import CORS
 
 app = Flask(__name__, static_url_path="/uploaded_files", static_folder="uploaded_files")
@@ -14,6 +15,7 @@ app.register_blueprint(upload_bp)
 app.register_blueprint(user_tables_bp)
 app.register_blueprint(ga_bp)
 app.register_blueprint(table_view_bp)
+app.register_blueprint(traditional_bp)
 
 @app.route("/api/ping")
 def ping():

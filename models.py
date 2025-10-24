@@ -27,6 +27,7 @@ class UserTable(Base):
 
     user = relationship("User", back_populates="tables")
     ga_results = relationship("GAResult", back_populates="user_table", cascade="all, delete")
+    traditional_results = relationship("TraditionalResult", back_populates="user_table", cascade="all, delete")
 
 
 class GAResult(Base):
@@ -51,6 +52,23 @@ class GAGeneration(Base):
     best_fitness = Column(Float, nullable=False)
 
     ga_result = relationship("GAResult", back_populates="generations")
+
+
+class TraditionalResult(Base):
+    __tablename__ = "traditional_results"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_table_id = Column(Integer, ForeignKey("user_tables.id", ondelete="CASCADE"))
+    
+    best_chromosome = Column(JSON, nullable=False)
+    selected_features = Column(JSON, nullable=False)
+    feature_weights = Column(JSON, nullable=False)
+    stages = Column(JSON, nullable=True)
+    user_table = relationship("UserTable", back_populates="traditional_results")
+
+from models import UserTable
+UserTable.traditional_results = relationship(
+    "TraditionalResult", back_populates="user_table", cascade="all, delete"
+)
 
 
 Base.metadata.create_all(engine)

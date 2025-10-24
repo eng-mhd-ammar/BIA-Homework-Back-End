@@ -6,11 +6,12 @@ from werkzeug.utils import secure_filename
 from utils import sanitize_table_name, token_required
 from models import db_session, UserTable, GAResult, GAGeneration, engine
 from services.ga_service import run_ga_on_df
+from services.traditional_service import run_traditional_on_df
+from models import TraditionalResult
 
 upload_bp = Blueprint("upload", __name__, url_prefix="/api/upload")
 UPLOAD_FOLDER = "uploaded_files"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 
 @upload_bp.route("/", methods=["POST"])
 @token_required
@@ -31,7 +32,7 @@ def upload_file():
 
     try:
         if ext in [".xlsx", ".xls"]:
-            df = pd.read_excel(file_path, engine="openpyxl" if ext == ".xlsx" else "xlrd")
+            df = pd.read_excel(file_path)
         else:
             df = pd.read_csv(file_path)
     except Exception as e:
@@ -69,9 +70,20 @@ def upload_file():
         )
         db_session.add(new_gen_entry)
 
+    traditional_result_data = run_traditional_on_df(df)
+    
+    new_traditional_entry = TraditionalResult(
+        user_table_id=new_user_table.id,
+        best_chromosome=traditional_result_data["best_chromosome"],
+        selected_features=traditional_result_data["selected_features"],
+        feature_weights=traditional_result_data["feature_weights"],
+        stages=traditional_result_data["stages"]
+    )
+    db_session.add(new_traditional_entry)
     db_session.commit()
 
     return jsonify({
-        "message": f"File uploaded successfully to table {table_name}",
-        "ga_result_id": new_ga_entry.id
+        "message": f"File uploaded and both algorithms executed successfully.",
+        "ga_result_id": new_ga_entry.id,
+        "lasso_result_id": new_traditional_entry.id
     })

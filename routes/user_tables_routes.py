@@ -15,6 +15,8 @@ def get_my_tables():
         result = []
         for t in tables:
             ga = t.ga_results[-1] if t.ga_results else None
+            trad = t.traditional_result if hasattr(t, "traditional_result") else None
+
             result.append({
                 "id": t.id,
                 "table_name": t.table_name,
@@ -23,6 +25,13 @@ def get_my_tables():
                     "id": ga.id if ga else None,
                     "fitness": ga.fitness if ga else None,
                     "selected_features": ga.selected_features if ga else []
+                },
+                "traditional_result": {
+                    "id": trad.id if trad else None,
+                    "best_chromosome": trad.best_chromosome if trad else [],
+                    "selected_features": trad.selected_features if trad else [],
+                    "feature_weights": trad.feature_weights if trad else [],
+                    "stages": trad.stages if trad else []
                 }
             })
 
