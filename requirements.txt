@@ -1,0 +1,10 @@
+Flask
+SQLAlchemy
+pandas
+openpyxl
+xlrd
+PyMySQL
+itsdangerous
+Werkzeug
+cryptography
+scikit-learn
