@@ -52,7 +52,17 @@ class GAGeneration(Base):
     best_fitness = Column(Float, nullable=False)
 
     ga_result = relationship("GAResult", back_populates="generations")
+    progressions = relationship("GAProgression", back_populates="generation", cascade="all, delete")  # الربط بالجيل
 
+
+class GAProgression(Base):
+    __tablename__ = "ga_progressions"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    generation_id = Column(Integer, ForeignKey("ga_generations.id", ondelete="CASCADE"), nullable=False)
+    best_overall_fitness = Column(Float, nullable=False)
+    generation_best_fitness = Column(Float, nullable=False)
+
+    generation = relationship("GAGeneration", back_populates="progressions")
 
 class TraditionalResult(Base):
     __tablename__ = "traditional_results"

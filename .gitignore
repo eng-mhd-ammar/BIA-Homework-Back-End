@@ -33,3 +33,5 @@ uploads/
 .idea/
 
 uploaded_files/
+routes/__pycache__
+services/__pycache__

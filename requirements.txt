@@ -8,3 +8,4 @@ itsdangerous
 Werkzeug
 cryptography
 scikit-learn
+flask_cors
