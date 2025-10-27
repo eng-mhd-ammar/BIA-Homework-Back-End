@@ -46,3 +46,4 @@ def login():
 
     token = create_token(user.id, user.username)
     return jsonify({"token": token, "message": "Login successful"}), 200
+

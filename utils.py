@@ -1,3 +1,4 @@
+# utils.py
 import re
 from flask import request, jsonify
 from itsdangerous import URLSafeTimedSerializer as Serializer, BadSignature, SignatureExpired
@@ -6,14 +7,14 @@ from models import db_session, User
 
 # Create Table Name
 def sanitize_table_name(s: str) -> str:
-    s = re.sub(r"[^\w]", "_", s) 
+    s = re.sub(r"[^\w]", "_", s)
     return s.lower()
 
 def get_serializer():
     return Serializer(SECRET_KEY)
 
 # Create Bearer Token
-def create_token(user_id, username, expires_sec=604800):
+def create_token(user_id, username):
     s = get_serializer()
     return s.dumps({"id": user_id, "username": username})
 
@@ -26,7 +27,6 @@ def verify_token(token, expires_sec=604800):
         return None
     except BadSignature:
         return None
-    from models import db_session, User
     return db_session.query(User).filter_by(id=data["id"]).first()
 
 # To Make Token Required
